@@ -55,6 +55,8 @@ fprintf('Running Gradient Descent ...\n')
 X = [ones(m, 1), data(:,1)]; % Add a column of ones to x
 theta = zeros(2, 1); % initialize fitting parameters
 
+% theta = [-3.9; 1.25];
+
 % Some gradient descent settings
 iterations = 1500;
 alpha = 0.01;
@@ -63,6 +65,7 @@ alpha = 0.01;
 computeCost(X, y, theta)
 
 % run gradient descent
+%[theta, J_history, theta_history] = gradientDescent(X, y, theta, alpha, iterations);
 theta = gradientDescent(X, y, theta, alpha, iterations);
 
 % print theta to screen
@@ -120,3 +123,4 @@ contour(theta0_vals, theta1_vals, J_vals, logspace(-2, 3, 20))
 xlabel('\theta_0'); ylabel('\theta_1');
 hold on;
 plot(theta(1), theta(2), 'rx', 'MarkerSize', 10, 'LineWidth', 2);
+#plot(theta_history(:,1), theta_history(:,2), 'rx', 'MarkerSize', 1, 'LineWidth', 1);

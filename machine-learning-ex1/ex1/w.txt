@@ -1,0 +1,9 @@
+# Created by Octave 4.0.0, Fri Mar 11 13:12:19 2016 CET <wcz@ubuntu>
+# name: w
+# type: matrix
+# rows: 2
+# columns: 2
+ 1600 3
+ 2400 3
+
+
