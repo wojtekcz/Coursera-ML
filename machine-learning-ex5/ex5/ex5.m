@@ -3,7 +3,7 @@
 %
 %  Instructions
 %  ------------
-% 
+%
 %  This file contains code that helps you get started on the
 %  exercise. You will need to complete the following functions:
 %
@@ -19,7 +19,7 @@
 clear ; close all; clc
 
 %% =========== Part 1: Loading and Visualizing Data =============
-%  We start the exercise by first loading and visualizing the dataset. 
+%  We start the exercise by first loading and visualizing the dataset.
 %  The following code will load the dataset into your environment and plot
 %  the data.
 %
@@ -27,9 +27,12 @@ clear ; close all; clc
 % Load Training Data
 fprintf('Loading and Visualizing Data ...\n')
 
-% Load from ex5data1: 
+% Load from ex5data1:
 % You will have X, y, Xval, yval, Xtest, ytest in your environment
 load ('ex5data1.mat');
+
+% X = [X; Xtest; Xval];
+% y = [y; ytest; yval];
 
 % m = Number of examples
 m = size(X, 1);
@@ -43,8 +46,8 @@ fprintf('Program paused. Press enter to continue.\n');
 pause;
 
 %% =========== Part 2: Regularized Linear Regression Cost =============
-%  You should now implement the cost function for regularized linear 
-%  regression. 
+%  You should now implement the cost function for regularized linear
+%  regression.
 %
 
 theta = [1 ; 1];
@@ -57,7 +60,7 @@ fprintf('Program paused. Press enter to continue.\n');
 pause;
 
 %% =========== Part 3: Regularized Linear Regression Gradient =============
-%  You should now implement the gradient for regularized linear 
+%  You should now implement the gradient for regularized linear
 %  regression.
 %
 
@@ -74,10 +77,10 @@ pause;
 
 %% =========== Part 4: Train Linear Regression =============
 %  Once you have implemented the cost and gradient correctly, the
-%  trainLinearReg function will use your cost function to train 
+%  trainLinearReg function will use your cost function to train
 %  regularized linear regression.
-% 
-%  Write Up Note: The data is non-linear, so this will not give a great 
+%
+%  Write Up Note: The data is non-linear, so this will not give a great
 %                 fit.
 %
 
@@ -98,10 +101,10 @@ pause;
 
 
 %% =========== Part 5: Learning Curve for Linear Regression =============
-%  Next, you should implement the learningCurve function. 
+%  Next, you should implement the learningCurve function.
 %
 %  Write Up Note: Since the model is underfitting the data, we expect to
-%                 see a graph with "high bias" -- slide 8 in ML-advice.pdf 
+%                 see a graph with "high bias" -- slide 8 in ML-advice.pdf
 %
 
 lambda = 0;
@@ -130,7 +133,7 @@ pause;
 %  complete polyFeatures to map each example into its powers
 %
 
-p = 8;
+p = 5;
 
 % Map X onto Polynomial Features and Normalize
 X_poly = polyFeatures(X, p);
@@ -159,12 +162,12 @@ pause;
 
 %% =========== Part 7: Learning Curve for Polynomial Regression =============
 %  Now, you will get to experiment with polynomial regression with multiple
-%  values of lambda. The code below runs polynomial regression with 
+%  values of lambda. The code below runs polynomial regression with
 %  lambda = 0. You should try running the code with different values of
 %  lambda to see how the fit and learning curve change.
 %
 
-lambda = 0;
+lambda = 1.9;
 [theta] = trainLinearReg(X_poly, y, lambda);
 
 % Plot training data and fit
@@ -196,25 +199,59 @@ fprintf('Program paused. Press enter to continue.\n');
 pause;
 
 %% =========== Part 8: Validation for Selecting Lambda =============
-%  You will now implement validationCurve to test various values of 
+%  You will now implement validationCurve to test various values of
 %  lambda on a validation set. You will then use this to select the
 %  "best" lambda value.
 %
 
-[lambda_vec, error_train, error_val] = ...
-    validationCurve(X_poly, y, X_poly_val, yval);
+% [lambda_vec, error_train, error_val] = ...
+%     validationCurve(X_poly, y, X_poly_val, yval);
+%
+% close all;
+% plot(lambda_vec, error_train, lambda_vec, error_val);
+% legend('Train', 'Cross Validation');
+% xlabel('lambda');
+% ylabel('Error');
+% % grid on;
+% % axis([2 4 3 5]);
+%
+% fprintf('lambda\t\tTrain Error\tValidation Error\n');
+% for i = 1:length(lambda_vec)
+% 	fprintf(' %f\t%f\t%f\n', ...
+%             lambda_vec(i), error_train(i), error_val(i));
+% end
+%
+% fprintf('Program paused. Press enter to continue.\n');
+% pause;
 
-close all;
-plot(lambda_vec, error_train, lambda_vec, error_val);
-legend('Train', 'Cross Validation');
-xlabel('lambda');
-ylabel('Error');
+%% =========== Part 9: Validation for Selecting polynomial degree =============
 
-fprintf('lambda\t\tTrain Error\tValidation Error\n');
-for i = 1:length(lambda_vec)
-	fprintf(' %f\t%f\t%f\n', ...
-            lambda_vec(i), error_train(i), error_val(i));
-end
+% [poly_degree_vec, error_train, error_val] = ...
+%     polyDegree(X_poly, y, X_poly_val, yval);
+%
+% close all;
+% plot(poly_degree_vec, error_train, poly_degree_vec, error_val);
+% legend('Train', 'Cross Validation');
+% xlabel('polynomial degree');
+% ylabel('Error');
+% grid on;
+% axis([1 8 0 10]);
+% % axis([1 8 0 5]);
+%
+% fprintf('degree\t\tTrain Error\tValidation Error\n');
+% for i = 1:length(poly_degree_vec)
+% 	fprintf(' %f\t%f\t%f\n', ...
+%             poly_degree_vec(i), error_train(i), error_val(i));
+% end
+%
+% fprintf('Program paused. Press enter to continue.\n');
+% pause;
+
+%% =========== Part 10: test error using the best value of λ =============
+
+test_error = linearRegCostFunction(X_poly_test, ytest, theta, 0);
+
+fprintf(['test error for λ = [%.3f]: %f\n'], lambda, test_error);
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;
