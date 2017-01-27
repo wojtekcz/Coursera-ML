@@ -1,0 +1,86 @@
+cost function, not regularized
+not vectorized, one call - 105s
+
+only J not vectorized - 0.595s
+only J vectorized     - 0.00339s
+
+test one pass
+
+m = size(X, 1);
+n = size(X, 2);
+X1 = [ones(m, 1) X];
+% initial_theta = zeros(n + 1, 1);
+initial_theta = ones(n + 1, 1) .* 0.1;
+lambda = 0.1;
+start=time();[J, grad] = lrCostFunction(initial_theta, X1, (y==9), lambda);czas=time()-start,J,grad(1:5,:)
+
+J not vectorized = 0.693147180559992
+J vectorized     = 0.693147180559992
+grad, n=1, not vectorized - 0.2993s
+grad(1) = 0.4
+
+grad, n=10, not vectorized - 3.00082s
+sum(grad(1:10)) = 0.400178652475142
+
+
+grad, vectorized - 0.0047s
+
+J + grad, vectorized - 0.00495s
+sum(grad) = 21.7887142969023
+sum(grad(1:10)) = 0.400178652475142
+
+
+J + grad, regularization not vectorized
+=======================================
+lambda = 0.1
+reg =    3.99999999999996e-05
+czas =  0.0105879306793213
+J =  4.86955144041863
+ans =
+   8.86467976869073e-01
+   2.00000000000000e-06
+   2.00000000000000e-06
+   2.14756462186588e-06
+   1.88123118294074e-07
+
+lambda = 100
+reg =  0.0399999999999996
+czas =  0.0100400447845459
+J =  4.90951144041863
+ans =
+   0.88646797686907342
+   0.00200000000000000
+   0.00200000000000000
+   0.00200014756462187
+   0.00199818812311829
+
+J + grad, regularization vectorized
+===================================
+lambda = 0.1
+reg =    3.99999999999996e-05
+czas =  0.00428700447082520
+J =  4.86955144041863
+ans =
+   8.86467976869073e-01
+   2.00000000000000e-06
+   2.00000000000000e-06
+   2.14756462186588e-06
+   1.88123118294074e-07
+
+lambda = 100
+reg =  0.0399999999999996
+czas =  0.00429987907409668
+J =  4.90951144041863
+ans =
+   0.88646797686907342
+   0.00200000000000000
+   0.00200000000000000
+   0.00200014756462187
+   0.00199818812311829
+
+
+prediction
+==========
+
+%[w, iw] = max(sigmoid(all_theta*x'))
+pred=sigmoid(all_theta*X1')';
