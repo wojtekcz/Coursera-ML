@@ -1,0 +1,6 @@
+regularization
+lambda = 0.0, Train Accuracy: 86.440678
+lambda = 1.0, Train Accuracy: 83.050847
+lambda = 0.1, Train Accuracy: 82.203390
+lambda = 10 , Train Accuracy: 74.576271
+lambda = 100, Train Accuracy: 61.016949

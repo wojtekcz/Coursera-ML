@@ -14,8 +14,10 @@ degree = 6;
 out = ones(size(X1(:,1)));
 for i = 1:degree
     for j = 0:i
+        %sprintf("i=%i j=%i x1^%i*x2^%i", i, j, i-j, j)
         out(:, end+1) = (X1.^(i-j)).*(X2.^j);
     end
+    %disp("")
 end
 
 end
