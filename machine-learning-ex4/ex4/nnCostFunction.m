@@ -8,8 +8,8 @@ function [J grad] = nnCostFunction(nn_params, ...
 %   [J grad] = NNCOSTFUNCTON(nn_params, hidden_layer_size, num_labels, ...
 %   X, y, lambda) computes the cost and gradient of the neural network. The
 %   parameters for the neural network are "unrolled" into the vector
-%   nn_params and need to be converted back into the weight matrices. 
-% 
+%   nn_params and need to be converted back into the weight matrices.
+%
 %   The returned parameter grad should be a "unrolled" vector of the
 %   partial derivatives of the neural network.
 %
@@ -24,8 +24,8 @@ Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):en
 
 % Setup some useful variables
 m = size(X, 1);
-         
-% You need to return the following variables correctly 
+
+% You need to return the following variables correctly
 J = 0;
 Theta1_grad = zeros(size(Theta1));
 Theta2_grad = zeros(size(Theta2));
@@ -46,12 +46,12 @@ Theta2_grad = zeros(size(Theta2));
 %         that your implementation is correct by running checkNNGradients
 %
 %         Note: The vector y passed into the function is a vector of labels
-%               containing values from 1..K. You need to map this vector into a 
+%               containing values from 1..K. You need to map this vector into a
 %               binary vector of 1's and 0's to be used with the neural network
 %               cost function.
 %
 %         Hint: We recommend implementing backpropagation using a for-loop
-%               over the training examples if you are implementing it for the 
+%               over the training examples if you are implementing it for the
 %               first time.
 %
 % Part 3: Implement regularization with the cost function and gradients.
@@ -62,30 +62,71 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+function [a3] = h_th(x)
+    a1 = [1; x];
+    a2 = [1; sigmoid(Theta1 * a1)];
+    a3 = sigmoid(Theta2 * a2);
+endfunction
 
+% add 1's column for a10 bias units
+% X = [ones(m, 1) X];
 
+% compute J(Theta)
+sum_i = 0;
+for i = 1:m,
+    yVec = zeros(num_labels, 1); yVec(y(i)) = 1;
+    hThVec = h_th(X(i,:)');
+    cost_i = -yVec .* log(hThVec) - (1-yVec) .* log(1 - hThVec);
+    sum_i += sum(cost_i);
+endfor
 
+J = 1/m * sum_i;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+% with regularization
+sumTheta1 = sum(sum(Theta1(:,2:end).^2));
+sumTheta2 = sum(sum(Theta2(:,2:end).^2));
+J += lambda/(2*m) * (sumTheta1 + sumTheta2);
 
 % -------------------------------------------------------------
+
+% compute gradients
+
+D1 = zeros(size(Theta1));
+D2 = zeros(size(Theta2));
+
+for t = 1:m,
+    % 1. feedforward pass
+    x = X(t,:)';
+    a1 = [1; x];
+    z2 = Theta1 * a1;
+    a2 = [1; sigmoid(z2)];
+    z3 = Theta2 * a2;
+    a3 = sigmoid(z3);
+
+    % 2. compute d3
+    yVec = zeros(num_labels, 1); yVec(y(t)) = 1;
+    d3 = a3 - yVec;
+
+    % 3. compute d2
+    d2 = (Theta2)' * d3 .* sigmoidGradient([1;z2]);
+
+    % 4. accumulate the gradient
+    d2 = d2(2:end);
+    D2 += d3*(a2)';
+    D1 += d2*(a1)';
+endfor
+
+% 5. obtain gradient
+Theta2_grad = (1/m) .* D2;
+Theta1_grad = (1/m) .* D1;
+
+% regularize gradients
+Theta2_grad(:,2:end) += (lambda/m) * Theta2(:,2:end);
+Theta1_grad(:,2:end) += (lambda/m) * Theta1(:,2:end);
 
 % =========================================================================
 
 % Unroll gradients
 grad = [Theta1_grad(:) ; Theta2_grad(:)];
-
 
 end
